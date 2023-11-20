@@ -1,6 +1,7 @@
 <?php
 include "../model/pdo.php";
 include "../model/sanpham.php";
+include "../model/danhmuc.php";
 // controller
 if (isset($_GET['act'])) {
     $act = $_GET['act'];
