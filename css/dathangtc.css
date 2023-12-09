@@ -1,0 +1,21 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    margin: auto;
+}
+.tong{
+    text-align: center;
+}
+.tttc button{
+    background-color: pink;
+    border: 0   ;
+    height: 40px;
+   padding: 10px;
+   border-radius: 10px;
+   font-weight: 700;
+}
+.tttc :hover{
+    background-color: palevioletred;
+}
