@@ -27,7 +27,7 @@
 							<div class="text w-100">
 								<h2>Chào Mừng Đăng Ký</h2>
 								<p>Đã  có tài Khoản?</p>
-								<a href="login.php" class="btn btn-white btn-outline-white">Đăng Nhập</a>
+								<a href="index.php?act=dangnhap" class="btn btn-white btn-outline-white">Đăng Nhập</a>
 							</div>
 			      </div>
 
@@ -43,22 +43,27 @@
 									</p>
 								</div>
 			      	</div>
-							<form action="#" class="signin-form">
+					<?php 
+						if(isset($notice) && ($notice!= "")){
+							echo $notice;
+						}
+					?>
+							<form method="post" action="index.php?act=dangky" class="signin-form">
 			      		<div class="form-group mb-3">
 			      			<label class="label" for="name">Tên Đăng Nhập </label>
-			      			<input type="text" class="form-control" placeholder="Tên Đăng Nhập" required>
+			      			<input name="user" type="text" class="form-control" placeholder="Tên Đăng Nhập" >
 			      		</div>
 		            <div class="form-group mb-3">
 		            	<label class="label" for="password">Mật Khẩu</label>
-		              <input type="password" class="form-control" placeholder="Mật Khẩu" required>
+		              <input type="text" name="password" class="form-control" placeholder="Mật Khẩu" >
 		            </div>
-                    <form action="#" class="signin-form">
+                    
 			      		<div class="form-group mb-3">
 			      			<label class="label" for="name">Email </label>
-			      			<input type="text" class="form-control" placeholder="Email" required>
+			      			<input type="text" name="email" class="form-control" placeholder="Email" >
 			      		</div>
 		            <div class="form-group">
-                    <a href="login.php"><input type="submit"  class="form-control btn btn-primary submit px-3" value="Đăng Ký"></a>
+                   <input  name="dangky" type="submit"  class="form-control btn btn-primary submit px-3" value="Đăng Ký">
 		            </div>
 		            <div class="form-group d-md-flex">
 		            	<div class="w-50 text-left">
