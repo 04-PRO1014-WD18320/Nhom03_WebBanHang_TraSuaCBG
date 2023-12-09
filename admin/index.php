@@ -6,7 +6,7 @@ include "../model/taikhoan.php";
 include "../model/binhluan.php";
 include "../model/cart.php";
 include "header.php";
-
+// include ".login.php";
 //controller
 if (isset($_GET['act'])) {
     $act = $_GET['act'];
@@ -57,7 +57,7 @@ if (isset($_GET['act'])) {
                 $giasp = $_POST['giasp'];
                 $motasp = $_POST['motasp'];
                 $anhsp = $_FILES['anhsp']['name'];
-                $target_dir = "../uploads/";
+                $target_dir = "../img/";
                 $target_file = $target_dir . basename($_FILES["anhsp"]["name"]);
                 move_uploaded_file($_FILES["anhsp"]["tmp_name"], $target_file);
                 insert_sp($namesp, $giasp, $anhsp, $motasp, $iddm);
