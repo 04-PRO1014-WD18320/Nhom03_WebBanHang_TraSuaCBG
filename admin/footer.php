@@ -3,7 +3,7 @@
         <!-- Copyright -->
         <div class="text-center p-3">
           © 2020 Copyright:
-          <a class="trans-04 text-none txt-f hov-red"   href="../index.php">X-Shop.com</a>
+          <a class="trans-04 text-none txt-f hov-red"   href="../index.php">TraSuaCBG.com</a>
         </div>
         <!-- Copyright -->
       </footer>
