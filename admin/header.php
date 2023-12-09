@@ -49,32 +49,32 @@
               </li>
               <li class="nav-item">
                 <a href="index.php?act=adddm" class="nav-link" href="javascript:void(0)"
-                  >Danh mục</a
+                  >Quản lí Danh mục</a
                 >
               </li>
               <li class="nav-item">
                 <a href="index.php?act=addsp" class="nav-link" href="javascript:void(0)"
-                  >Sản phẩm</a
+                  > Quản lí Sản phẩm</a
                 >
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="index.php?act=dskh" class="nav-link" href="javascript:void(0)"
                   >Khách hàng</a
                 >
-              </li>
+              </li> -->
               <li class="nav-item">
                 <a href="index.php?act=dsbl" class="nav-link" href="javascript:void(0)"
                   >Bình luận</a
                 >
-              </li>
+              <!-- </li>
               <li class="nav-item">
                 <a href="index.php?act=dsdh" class="nav-link" href="javascript:void(0)"
                   >Đơn hàng</a
-                >
-              </li>
+                > -->
+              <!-- </li>
               <li class="nav-item">
                 <a href="index.php?act=thongke" class="nav-link" href="javascript:void(0)"
-                  >Thống kê</a
+                  >Thống kê</a -->
                 >
               </li>
             </ul>
