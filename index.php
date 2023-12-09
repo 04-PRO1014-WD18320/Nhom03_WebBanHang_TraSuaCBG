@@ -1,31 +1,91 @@
 <?php
-
+ob_start();
+session_start();
 include "./model/pdo.php";
 include "./model/danhmuc.php";
 include "./model/sanpham.php";
 include "./model/taikhoan.php";
 include "./model/cart.php";
 include "./model/giohang.php";
+include "./model/donhang.php";
+include "./model/binhluan.php";
 include "./header.php";
-// include "global.php";
 
-// kiểm tra session my cart đã tồn tại là 1 mảng chưa, nếu chưa thì khởi tạo 1 mảng mới
+if (isset($_SESSION['user'])) {
+    extract($_SESSION['user']);
+    $idtk = $id;
+}
+
+
+
+
 if (!isset($_SESSION['mycart'])) $_SESSION['mycart'] = [];
-// gán 1 biến để trả về dữ liệu select từ modul sản phẩm
+
 $spnew = loadall_sp_home();
-$showlistdm = loadall_dm(); 
+$showlistdm = loadall_dm();
 $top10sp = loadall_sp_top10();
-// kiểm tra sự tồn tại của act rồi dùng switch case chọn điều hướng đến các chức năng
+
 if (isset($_GET['act']) && ($_GET['act'] != "")) {
     $act = $_GET['act'];
     switch ($act) {
+       
 
-            // CONTROLLER SẢN PHẨM
+            case 'home':
+                include "home.php";
+                break;
+
+        case 'giohang':
+            if(isset($_SESSION['user']['id'])){
+                $userid = $_SESSION['user']['id'];
+            $listgiohang = listgiohang($idtk);
+            include "giohang.php";
+        } else {
+            header('Location: index.php?act=dangnhap');
+        }
+            break;
+
+        case 'themgiohang':
+            if(isset($_SESSION['user']['id'])){
+                $userid = $_SESSION['user']['id'];
+            themgiohang($_GET['idsp'], $idtk);
+            $listgiohang = listgiohang($idtk);
+            include "giohang.php";
+        } else {
+            header('Location: index.php?act=dangnhap');
+        }
+            break;
+
+        case 'xoagiohang':
+            deletegh($_GET['idgh']);
+            $listgiohang = listgiohang($idtk);
+            include "giohang.php";
+            break;
+
+        case 'muahang':
+            $onesp = loadone_sp($_GET['idsp']);
+            include 'thanhtoan.php';
+            break;
+
+        case 'thanhtoan':
+            if (isset($_POST['thanhtoan'])) {
+                $ten = $_POST['ten'];
+                $diachi = $_POST['diachi'];
+                $sdt = $_POST['sdt'];
+                thanhtoan_donhang( $idtk, $ten, $diachi, $sdt,$_GET['idsp']);
+            }
+            include 'home.php';
+            break;
+
+        case 'dathangthanhcong':
+            include "dathangthanhcong.php";
+            break;
+
+
         case 'sanpham':
             if (isset($_POST['iptimkiem']) && $_POST['iptimkiem'] != "") {
                 $iptimkiem = $_POST['iptimkiem'];
             } else {
-                $iptimkiem = " ";  
+                $iptimkiem = " ";
             }
             if (isset($_GET['iddm']) && $_GET['iddm'] > 0) {
                 $iddm = $_GET['iddm'];
@@ -39,17 +99,28 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
 
             // CONTROLLER SẢN PHẨM CHI TIẾT
         case 'sanphamct':
+            if(isset($_POST['guibinhluan'])){
+                if (isset($_GET['idsp']) && $_GET['idsp'] > 0){
+                extract($_POST);
+                $ngaybl = date('d/m/y');
+                //var_dump($_POST);
+                insert_bl($noidung, $iduser, $_GET['idsp'], $ngaybl);
+            }
+        }
+        
             if (isset($_GET['idsp']) && $_GET['idsp'] > 0) {
                 $id = $_GET['idsp'];
                 $onesp = loadone_sp($id);
                 extract($onesp);
                 $spsame = loadall_sp_same($id, $iddm);
+                $binhluan = load_bl($_GET['idsp']);
+                
                 include "sanpham/chiitet.php";
             } else {
                 include "index.php";
             }
             break;
-            
+
             // CONTROLLER ĐĂNG KÝ
         case 'dangky':
             if (isset($_POST['dangky']) && $_POST['dangky']) {
@@ -59,7 +130,7 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 insert_tk($user, $password, $email);
                 $notice = "Đăng ký thành công! Vui lòng đăng nhập";
             }
-           header("localhost:login.php");
+            include "signup.php";
             break;
 
             // CONTROLLER ĐĂNG NHẬP
@@ -68,21 +139,22 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 $user = $_POST['user'];
                 $password = $_POST['password'];
                 $checkuser = check_user($user, $password);
-                if (is_array($checkuser)) {
+
+                if ($checkuser) {
                     $_SESSION['user'] = $checkuser;
                     header("Location: index.php");
                 } else {
                     $notice = "Tài khoản không tồn tại! Vui lòng đăng nhập một tài khoản khác";
-                    include "view/thongbaoloi.php";
+                    header("Location: login.php");
                     break;
                 }
             }
-            include "index.php";
+            include "login.php";
             break;
 
             // CONTROLLER ĐỔI MẬT KHẨU
         case 'doimk':
-            if(isset($_POST['btn_doimk']) && ($_POST['btn_doimk'])) { 
+            if (isset($_POST['btn_doimk']) && ($_POST['btn_doimk'])) {
                 $id = $_POST['id'];
                 $user = $_POST['user'];
                 $email = $_POST['email'];
@@ -189,7 +261,27 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             $billct = loadall_cart($idbill);
             include "view/giohang/billconfirm.php";
             break;
-
+            // dat hang 2
+            case 'thanhtoan2':
+                if(isset($_SESSION['user']['id'])){
+                    $userid = $_SESSION['user']['id'];
+                }
+                $tk = loadall_tk($userid);
+                $listsp = listgiohang($userid);
+                $donhang_id ="";
+                if (isset($_POST['muatatca'])){
+                    extract($listsp);
+                }
+                if (isset($_POST['dathang'])){
+                    $id_tk = $_POST['id_tk'];
+                    $ten = $_POST['ten'];
+                    $diachi = $_POST['diachi'];
+                    $sdt = $_POST['sdt'];
+                    $donhang_id=thanhtoan_donhang($idtk,$ten,$diachi,$sdt,$idsp);
+                    header('Location: index.php?act=dathangthanhcong');
+                }
+                include "thanhtoan2.php";
+                break;
             // CONTROLLER GIỎ HÀNG CỦA TÔI
         case 'mybill':
             $listbill = loadall_bill($_SESSION['user']['id']);
@@ -220,7 +312,7 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             break;
     }
 } else {
-     include "home.php";
+    include "home.php";
 }
-
+ob_end_flush();
 include "./footer.php";
